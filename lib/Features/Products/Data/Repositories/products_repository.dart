@@ -4,7 +4,7 @@ import 'package:task_app/Features/Products/Data/DataSources/products_datasource.
 import 'package:task_app/Features/Products/Data/Models/product_model.dart';
 
 abstract class ProductsRepository {
-  Future<Either<Failure, List<Product>>> getProducts();
+  Future<Either<Failure, List<Product>>> getProducts(bool forceUpdate);
 }
 
 class ProductsRepositoryImpl implements ProductsRepository {
@@ -16,16 +16,24 @@ class ProductsRepositoryImpl implements ProductsRepository {
     this._productsDatabaseDataSource,
   );
   @override
-  Future<Either<Failure, List<Product>>> getProducts() async {
-    final cacheResult = await _productsDatabaseDataSource.getProducts();
-    if (cacheResult.isRight()) {
-      return cacheResult;
-    } else {
+  Future<Either<Failure, List<Product>>> getProducts(bool forceUpdate) async {
+    if (forceUpdate) {
       final networkResult = await _productsDataSource.getProducts();
       if (networkResult.isRight()) {
         networkResult.fold((l) => null, (r) => _productsDatabaseDataSource.saveProducts(r));
       } 
       return networkResult;
+    }else{
+      final cacheResult = await _productsDatabaseDataSource.getProducts();
+      if (cacheResult.isRight()) {
+        return cacheResult;
+      } else {
+        final networkResult = await _productsDataSource.getProducts();
+        if (networkResult.isRight()) {
+          networkResult.fold((l) => null, (r) => _productsDatabaseDataSource.saveProducts(r));
+        }
+        return networkResult;
+      }
     }
   }
 }

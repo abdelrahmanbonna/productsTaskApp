@@ -12,7 +12,7 @@ class SplashBloc extends Bloc<SplashEvents, BaseState> {
   
   Future<void> _getProducts(GetProductsEvent event, Emitter<BaseState> emit) async {
     emit(const LoadingState());
-    final result = await _productsRepository.getProducts();
+    final result = await _productsRepository.getProducts(event.forceUpdate);
     result.fold(
       (failure) => emit(ErrorState(failure: failure)),
       (products) => emit(ProductsSuccessState(products: products)),

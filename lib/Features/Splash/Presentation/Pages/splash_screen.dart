@@ -20,7 +20,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void initState() {
-    _splashBloc.add(GetProductsEvent());
+    _splashBloc.add(GetProductsEvent(forceUpdate: true));
     super.initState();
   }
 

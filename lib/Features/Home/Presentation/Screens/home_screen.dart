@@ -2,6 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:task_app/Core/Config/route_names.dart';
 import 'package:task_app/Features/Home/Presentation/Bloc/home.events.dart';
 import 'package:task_app/Features/Home/Presentation/Bloc/home_bloc.dart';
 import 'package:task_app/Features/Home/Presentation/Bloc/home_states.dart';
@@ -68,8 +69,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       imageUrl: state.products[index].image,
                       title: state.products[index].title,
                       price: state.products[index].price.toString(),
+                      rating: state.products[index].rating,
                       onTap: () {
-                        //todo: implement product details
+                        Get.toNamed(RouteNames.details,
+                            arguments: state.products[index]);
                       },
                     ),
                   );

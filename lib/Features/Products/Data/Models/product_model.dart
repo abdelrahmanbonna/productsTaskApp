@@ -9,6 +9,7 @@ class Product {
     final Category category;
     final String image;
     final Rating rating;
+    final bool isFavorite;
 
     Product({
         required this.id,
@@ -18,6 +19,7 @@ class Product {
         required this.category,
         required this.image,
         required this.rating,
+        this.isFavorite=false,
     });
 
     factory Product.fromJson(Map<String, dynamic> json) => Product(
@@ -28,6 +30,7 @@ class Product {
         category: getCategoryEnum(json["category"]),
         image: json["image"],
         rating: Rating.fromJson(json["rating"]),
+        isFavorite: json['isFavorite'] ?? false,
     );
 
     Map<String, dynamic> toJson() => {
@@ -38,5 +41,6 @@ class Product {
         "category": category.name,
         "image": image,
         "rating": rating.toJson(),
+        "isFavorite": isFavorite,
     };
 }

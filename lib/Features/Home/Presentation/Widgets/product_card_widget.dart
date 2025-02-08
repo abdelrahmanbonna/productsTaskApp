@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
+import 'package:task_app/Features/Products/Data/Models/rating_model.dart';
 
 class ProductCardWidget extends StatelessWidget {
   const ProductCardWidget({
@@ -9,10 +10,12 @@ class ProductCardWidget extends StatelessWidget {
     required this.title,
     required this.price,
     required this.onTap,
+    required this.rating,
   });
   final String imageUrl;
   final String title;
   final String price;
+  final Rating rating;
   final Function() onTap;
 
   @override
@@ -50,11 +53,11 @@ class ProductCardWidget extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             Expanded(
-              flex: 2,
+              flex: 1,
               child: Text(
                 title,
                 overflow: TextOverflow.ellipsis,
-                maxLines: 2,
+                maxLines: 1,
               ),
             ),
             const SizedBox(height: 10),

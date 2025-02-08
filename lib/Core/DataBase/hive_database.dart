@@ -10,8 +10,9 @@ class HiveDatabase implements BaseDatabase {
   HiveDatabase(this._box);
 
   @override
-  Future<Map<String, dynamic>> getData(String key) {
-    return _box.get(key);
+  Future<dynamic> getData(String key) {
+    final String? json = _box.get(key);
+    return json != null ? jsonDecode(json) : null;
   }
 
   @override

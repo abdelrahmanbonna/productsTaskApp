@@ -16,7 +16,7 @@ class ProductsLocalDatasource extends ProductsDatabaseDataSource {
     if (products.isNotEmpty) {
       return Right(products.entries.map((entry) => Product.fromJson(entry.value)).toList());
     } else {
-      return const Left(ServerFailure(message: 'No products found'));
+      return const Left(CacheFailure(message: 'No products found'));
     }
   }
 

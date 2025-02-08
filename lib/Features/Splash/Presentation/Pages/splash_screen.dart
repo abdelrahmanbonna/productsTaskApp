@@ -16,31 +16,36 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  SplashBloc get _splashBloc => Get.find<SplashBloc>();
-
   @override
   void initState() {
-    _splashBloc.add(GetProductsEvent(forceUpdate: true));
+    context.read<SplashBloc>().add(GetProductsEvent(forceUpdate: true));
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      body: BlocConsumer(
+    return BlocProvider(
+      create: (context) => context.read<SplashBloc>(),
+      child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        body: BlocConsumer<SplashBloc, BaseState>(
+          listener: (context, state) {
+            if (state is ProductsSuccessState) {
+              Get.offAllNamed(RouteNames.home);
+            }
+          },
           builder: (context, state) {
-           if(state is ErrorState){
-             return Center(
-              child: FadeIn(
-                duration: const Duration(milliseconds: 1000),
-                delay: const Duration(milliseconds: 1000),
-                child: Text(state.failure?.message??"Something went wrong"),
-              ),
-            );
-           }
+            if (state is ErrorState) {
+              return Center(
+                child: FadeIn(
+                  duration: const Duration(milliseconds: 1000),
+                  delay: const Duration(milliseconds: 1000),
+                  child: Text(state.failure?.message ?? "Something went wrong"),
+                ),
+              );
+            }
 
-           return Center(
+            return Center(
               child: FadeIn(
                 duration: const Duration(milliseconds: 500),
                 delay: const Duration(milliseconds: 500),
@@ -48,12 +53,8 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             );
           },
-          listener: (context, state) {
-            if(state is ProductsSuccessState){
-              Get.offAllNamed(RouteNames.home);
-            }
-          },
         ),
+      ),
     );
   }
 }

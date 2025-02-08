@@ -12,16 +12,16 @@ import 'package:task_app/Features/Products/Data/Repositories/products_repository
 /// DependencyInjection is responsible for registering all app-wide dependencies
 /// This includes services, repositories, and global controllers
 class DependencyInjection {
-  static void init() {
+  static void init() async {
     // Register core services
-    _initCoreServices();
+    await _initCoreServices();
 
     // Register repositories
     _initRepositories();
   }
 
-  static void _initCoreServices() {
-    // Core services are initialized here
+  static Future<void> _initCoreServices() async {
+    // Core services initialization
     Get.put<Dio>(Dio(), permanent: true);
     Get.put<NetworkService>(
       NetworkService(
@@ -31,9 +31,8 @@ class DependencyInjection {
       ),
       permanent: true,
     );
-
-    Get.put<Box>(Hive.box(AppConstants.hiveBoxName), permanent: true);
-    Get.put<HiveDatabase>(HiveDatabase(Get.find<Box>()), permanent: true);
+    
+    Get.put<HiveDatabase>(HiveDatabase(Hive.box(AppConstants.hiveBoxName)), permanent: true);
   }
 
   static void _initRepositories() {

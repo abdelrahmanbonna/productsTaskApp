@@ -25,6 +25,7 @@ class ProductsRepositoryImpl implements ProductsRepository {
     this._favoriteProductDataSource,
     this._favoriteProducts,
   );
+  
   @override
   Future<Either<Failure, List<Product>>> getProducts(bool forceUpdate) async {
     if (forceUpdate) {
@@ -37,40 +38,17 @@ class ProductsRepositoryImpl implements ProductsRepository {
     } else {
       final cacheResult = await _productsDatabaseDataSource.getProducts();
       if (cacheResult.isRight()) {
-        return cacheResult.map((r) => r.map((e) {
-              if (_favoriteProducts.contains(e)) {
-                e.isFavorite = true;
-              } else {
-                e.isFavorite = false;
-              }
-
-              return e;
-            }).toList());
+        return cacheResult;
       } else {
         final networkResult = await _productsDataSource.getProducts();
         if (networkResult.isRight()) {
           networkResult.fold(
-            (l) => null,
-            (r) => _productsDatabaseDataSource.saveProducts(r.map((e) {
-              if (_favoriteProducts.contains(e)) {
-                e.isFavorite = true;
-              } else {
-                e.isFavorite = false;
-              }
-
-              return e;
-            }).toList()),
-          );
+              (l) => null,
+              (r) => _productsDatabaseDataSource.saveProducts(
+                    r,
+                  ));
         }
-        return networkResult.map((r) => r.map((e) {
-              if (_favoriteProducts.contains(e)) {
-                e.isFavorite = true;
-              } else {
-                e.isFavorite = false;
-              }
-
-              return e;
-            }).toList());
+        return networkResult;
       }
     }
   }
@@ -99,8 +77,7 @@ class ProductsRepositoryImpl implements ProductsRepository {
 
   @override
   Future<bool> addFavoriteProduct(Product product) {
-    product.isFavorite = true;
-    _favoriteProducts.add(product);
+    _favoriteProducts.add(product.copyWith(isFavorite: true));
     return _favoriteProductDataSource.saveProducts(_favoriteProducts);
   }
 

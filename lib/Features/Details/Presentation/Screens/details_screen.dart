@@ -18,6 +18,13 @@ class DetailsScreen extends StatefulWidget {
 
 class _DetailsScreenState extends State<DetailsScreen> {
   final DetailsBloc _detailsBloc = Get.find<DetailsBloc>();
+  late Product _product;
+
+  @override
+  void initState() {
+    super.initState();
+    _product = widget.product;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +48,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                 flex: 2,
                 child: Center(
                   child: CachedNetworkImage(
-                    imageUrl: widget.product.image,
+                    imageUrl: _product.image,
                     width: 100,
                     height: 100,
                     fit: BoxFit.contain,
@@ -69,7 +76,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        widget.product.title,
+                        _product.title,
                         style: Theme.of(context).textTheme.titleLarge,
                         overflow: TextOverflow.clip,
                         maxLines: 2,
@@ -79,12 +86,12 @@ class _DetailsScreenState extends State<DetailsScreen> {
                           RatingBar.readOnly(
                             filledIcon: Icons.star,
                             emptyIcon: Icons.star_border,
-                            initialRating: widget.product.rating.rate,
+                            initialRating: _product.rating.rate,
                             maxRating: 5,
                             size: 22,
                           ),
                           Text(
-                            '(${widget.product.rating.count})',
+                            '(${_product.rating.count})',
                             style: Theme.of(context).textTheme.bodyMedium,
                           ),
                         ],
@@ -94,26 +101,30 @@ class _DetailsScreenState extends State<DetailsScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            widget.product.category.name,
+                            _product.category.name,
                             style: Theme.of(context).textTheme.bodyMedium,
                           ),
                           IconButton(
                             onPressed: () {
-                              if (widget.product.isFavorite) {
+                              if (_product.isFavorite) {
                                 _detailsBloc
                                     .add(RemoveFromFavoriteProductsEvent(
-                                  product: widget.product,
+                                  product: _product,
                                 ));
-                                widget.product.isFavorite = false;
+                                _product = _product.copyWith(
+                                  isFavorite: false,
+                                );
                               } else {
                                 _detailsBloc.add(SaveToFavoriteProductsEvent(
-                                  product: widget.product,
+                                  product: _product,
                                 ));
-                                widget.product.isFavorite = true;
+                                _product = _product.copyWith(
+                                  isFavorite: true,
+                                );
                               }
                             },
                             icon: Icon(
-                              widget.product.isFavorite
+                              _product.isFavorite
                                   ? Icons.favorite
                                   : Icons.favorite_border_outlined,
                               color: Theme.of(context).iconTheme.color,
@@ -123,7 +134,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                       ),
                       const SizedBox(height: 16),
                       Text(
-                        '${widget.product.price} \$',
+                        '${_product.price} \$',
                         style: Theme.of(context).textTheme.labelLarge,
                         textAlign: TextAlign.left,
                       ),
@@ -135,7 +146,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                       ),
                       const SizedBox(height: 16),
                       Text(
-                        widget.product.description,
+                        _product.description,
                         style: Theme.of(context).textTheme.bodyLarge,
                         overflow: TextOverflow.clip,
                         maxLines: 1,

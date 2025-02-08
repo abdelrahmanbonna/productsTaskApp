@@ -10,9 +10,9 @@ class Product extends Equatable {
     final Category category;
     final String image;
     final Rating rating;
-    bool isFavorite;
+    final bool isFavorite;
 
-    Product({
+    const Product({
         required this.id,
         required this.title,
         required this.price,
@@ -44,15 +44,38 @@ class Product extends Equatable {
         "rating": rating.toJson(),
         "isFavorite": isFavorite,
     };
-    
-      @override
-      List<Object?> get props => [
-        id,
-        title,
-        price,
-        description,
-        category,
-        image,
-        rating,
-      ];
+
+    Product copyWith({
+      int? id,
+      String? title,
+      double? price,
+      String? description,
+      Category? category,
+      String? image,
+      Rating? rating,
+      bool? isFavorite,
+    }) {
+      return Product(
+        id: id ?? this.id,
+        title: title ?? this.title,
+        price: price ?? this.price,
+        description: description ?? this.description,
+        category: category ?? this.category,
+        image: image ?? this.image,
+        rating: rating ?? this.rating,
+        isFavorite: isFavorite ?? this.isFavorite,
+      );
+    }
+
+    @override
+    List<Object?> get props => [
+      id,
+      title,
+      price,
+      description,
+      category,
+      image,
+      rating,
+      isFavorite,
+    ];
 }

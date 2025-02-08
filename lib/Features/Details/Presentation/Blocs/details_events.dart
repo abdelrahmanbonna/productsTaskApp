@@ -3,6 +3,8 @@ import 'package:task_app/Features/Products/Data/Models/product_model.dart';
 
 abstract class DetailsEvents implements BaseEvent {}
 
+sealed class DetailsEvent {}
+
 class SaveToFavoriteProductsEvent implements DetailsEvents {
   final Product product;
 
@@ -25,4 +27,11 @@ class RemoveFromFavoriteProductsEvent implements DetailsEvents {
   
   @override 
   bool? get stringify => true;
+}
+
+class ToggleFavoriteEvent extends DetailsEvent {
+  final Product product;
+  final bool isFavorite;
+
+  ToggleFavoriteEvent(this.product, this.isFavorite);
 }

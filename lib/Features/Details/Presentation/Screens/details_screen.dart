@@ -99,14 +99,21 @@ class _DetailsScreenState extends State<DetailsScreen> {
                           ),
                           IconButton(
                             onPressed: () {
-                              if (widget.product.isFavorite) return;
-                              _detailsBloc.add(SaveToFavoriteProductsEvent(
-                                product: widget.product,
-                              ));
+                              if (widget.product.isFavorite) {
+                                _detailsBloc
+                                    .add(RemoveFromFavoriteProductsEvent(
+                                  product: widget.product,
+                                ));
+                                widget.product.isFavorite = false;
+                              } else {
+                                _detailsBloc.add(SaveToFavoriteProductsEvent(
+                                  product: widget.product,
+                                ));
+                                widget.product.isFavorite = true;
+                              }
                             },
                             icon: Icon(
-                              state is ProductSavedToFavorite ||
-                                      widget.product.isFavorite
+                              widget.product.isFavorite
                                   ? Icons.favorite
                                   : Icons.favorite_border_outlined,
                               color: Theme.of(context).iconTheme.color,

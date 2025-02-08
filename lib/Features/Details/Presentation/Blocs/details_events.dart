@@ -14,3 +14,15 @@ class SaveToFavoriteProductsEvent implements DetailsEvents {
   @override
   bool? get stringify => true;
 }
+
+class RemoveFromFavoriteProductsEvent implements DetailsEvents {
+  final Product product;
+
+  RemoveFromFavoriteProductsEvent({required this.product});
+
+  @override 
+  List<Object?> get props => [product];
+  
+  @override 
+  bool? get stringify => true;
+}

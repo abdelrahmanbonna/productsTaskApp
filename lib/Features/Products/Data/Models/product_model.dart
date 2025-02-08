@@ -1,7 +1,8 @@
+import 'package:equatable/equatable.dart';
 import 'category_enum.dart';
 import 'rating_model.dart';
 
-class Product {
+class Product extends Equatable {
     final int id;
     final String title;
     final double price;
@@ -9,7 +10,7 @@ class Product {
     final Category category;
     final String image;
     final Rating rating;
-    final bool isFavorite;
+    bool isFavorite;
 
     Product({
         required this.id,
@@ -43,4 +44,15 @@ class Product {
         "rating": rating.toJson(),
         "isFavorite": isFavorite,
     };
+    
+      @override
+      List<Object?> get props => [
+        id,
+        title,
+        price,
+        description,
+        category,
+        image,
+        rating,
+      ];
 }

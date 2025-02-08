@@ -30,54 +30,83 @@ class ProductsRepositoryImpl implements ProductsRepository {
     if (forceUpdate) {
       final networkResult = await _productsDataSource.getProducts();
       if (networkResult.isRight()) {
-        networkResult.fold((l) => null, (r) => _productsDatabaseDataSource.saveProducts(r));
-      } 
+        networkResult.fold(
+            (l) => null, (r) => _productsDatabaseDataSource.saveProducts(r));
+      }
       return networkResult;
-    }else{
+    } else {
       final cacheResult = await _productsDatabaseDataSource.getProducts();
       if (cacheResult.isRight()) {
-        return cacheResult;
+        return cacheResult.map((r) => r.map((e) {
+              if (_favoriteProducts.contains(e)) {
+                e.isFavorite = true;
+              } else {
+                e.isFavorite = false;
+              }
+
+              return e;
+            }).toList());
       } else {
         final networkResult = await _productsDataSource.getProducts();
         if (networkResult.isRight()) {
-          networkResult.fold((l) => null, (r) => _productsDatabaseDataSource.saveProducts(r));
+          networkResult.fold(
+            (l) => null,
+            (r) => _productsDatabaseDataSource.saveProducts(r.map((e) {
+              if (_favoriteProducts.contains(e)) {
+                e.isFavorite = true;
+              } else {
+                e.isFavorite = false;
+              }
+
+              return e;
+            }).toList()),
+          );
         }
-        return networkResult;
+        return networkResult.map((r) => r.map((e) {
+              if (_favoriteProducts.contains(e)) {
+                e.isFavorite = true;
+              } else {
+                e.isFavorite = false;
+              }
+
+              return e;
+            }).toList());
       }
     }
   }
-  
+
   @override
   Future<bool> removeFavoriteProducts() {
     return _favoriteProductDataSource.removeProducts();
   }
-  
+
   @override
   Future<bool> saveFavoriteProducts(List<Product> products) {
     return _favoriteProductDataSource.saveProducts(products);
   }
-  
+
   @override
   Future<List<Product>> getFavoriteProducts() async {
-    final listFromDataSource = await  _favoriteProductDataSource.getProducts();
-  
-    if(listFromDataSource.isNotEmpty){
+    final listFromDataSource = await _favoriteProductDataSource.getProducts();
+
+    if (listFromDataSource.isNotEmpty) {
       _favoriteProducts.clear();
       _favoriteProducts.addAll(listFromDataSource);
     }
 
     return Future.value(_favoriteProducts);
   }
-  
+
   @override
   Future<bool> addFavoriteProduct(Product product) {
+    product.isFavorite = true;
     _favoriteProducts.add(product);
     return _favoriteProductDataSource.saveProducts(_favoriteProducts);
   }
-  
+
   @override
   Future<bool> removeFavoriteProduct(Product product) {
-    _favoriteProducts.remove(product);
+    _favoriteProducts.removeAt(_favoriteProducts.indexOf(product));
     return _favoriteProductDataSource.saveProducts(_favoriteProducts);
   }
 }

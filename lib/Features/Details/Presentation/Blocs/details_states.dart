@@ -31,6 +31,20 @@ class LoadingState extends DetailsStates {
   bool? get stringify => true;
 }
 
+class ProductRemovedFromFavorite extends DetailsStates {
+  @override
+  Failure? get failure => null;
+
+  @override
+  bool get isLoading => false;
+
+  @override
+  List<Object?> get props => [];
+  
+  @override
+  bool? get stringify => true;
+}
+
 class ProductSavedToFavorite extends DetailsStates {
   @override
   Failure? get failure => null;

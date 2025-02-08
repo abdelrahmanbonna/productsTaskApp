@@ -21,15 +21,15 @@ class FavoriteProductDatasourceImpl implements FavoriteProductDataSource {
         .then((value) => true)
         .catchError((error) => false);
   }
-  
+
   @override
   Future<List<Product>> getProducts() {
     return _hiveDatabase
         .getData(ProductsConstants.favoriteProductsKey)
-        .then((value) => value?.map((e) => Product.fromJson(e)).toList() ?? [])
-        .catchError((error) => []);
+        .map((dynamic entry) => Product.fromJson(entry))
+        .toList();
   }
-  
+
   @override
   Future<bool> removeProducts() {
     return _hiveDatabase

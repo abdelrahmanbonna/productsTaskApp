@@ -12,9 +12,11 @@ class ProductsLocalDatasource extends ProductsDatabaseDataSource {
 
   @override
   Future<Either<Failure, List<Product>>> getProducts() async {
-    final products = await _hiveDatabase.getData(ProductsConstants.productsKey);
-    if (products.isNotEmpty) {
-      return Right(products.entries.map((entry) => Product.fromJson(entry.value)).toList());
+    final Iterable? products =
+        await _hiveDatabase.getData(ProductsConstants.productsKey);
+    if (products != null) {
+      return Right(
+          products.map((dynamic entry) => Product.fromJson(entry)).toList());
     } else {
       return const Left(CacheFailure(message: 'No products found'));
     }
@@ -23,7 +25,8 @@ class ProductsLocalDatasource extends ProductsDatabaseDataSource {
   @override
   Future<bool> saveProducts(List<Product> products) async {
     return _hiveDatabase
-        .saveData(ProductsConstants.productsKey, products.map((e) => e.toJson()).toList())
+        .saveData(ProductsConstants.productsKey,
+            products.map((e) => e.toJson()).toList())
         .then((value) => true)
         .catchError((error) => false);
   }

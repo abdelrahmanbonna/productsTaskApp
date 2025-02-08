@@ -10,7 +10,7 @@ class HiveDatabase implements BaseDatabase {
   HiveDatabase(this._box);
 
   @override
-  Future<dynamic> getData(String key) {
+  dynamic getData(String key) {
     final String? json = _box.get(key);
     return json != null ? jsonDecode(json) : null;
   }
@@ -23,6 +23,9 @@ class HiveDatabase implements BaseDatabase {
   @override
   Future<bool> saveData<T>(String key, T data) {
     final String json = jsonEncode(data);
-    return _box.put(key, json).then((value) => true).catchError((error) => false);
+    return _box
+        .put(key, json)
+        .then((value) => true)
+        .catchError((error) => false);
   }
 }

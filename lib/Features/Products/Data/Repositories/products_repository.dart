@@ -34,8 +34,7 @@ class ProductsRepositoryImpl implements ProductsRepository {
         (l) => null,
         (r) => _productsDatabaseDataSource.saveProducts(r),
       );
-      _favoriteProducts = _favoriteProductDataSource
-          .getProducts();
+      _favoriteProducts = _favoriteProductDataSource.getProducts();
     }
 
     final cacheResult = await _productsDatabaseDataSource.getProducts();
@@ -89,9 +88,7 @@ class ProductsRepositoryImpl implements ProductsRepository {
 
   @override
   Future<bool> removeFavoriteProduct(Product product) async {
-    final updatedProduct = product.copyWith(isFavorite: false);
     _favoriteProducts.removeWhere((p) => p.id == product.id);
-    _favoriteProducts.add(updatedProduct);
     return _favoriteProductDataSource.saveProducts(_favoriteProducts);
   }
 }

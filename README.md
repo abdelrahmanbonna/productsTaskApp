@@ -35,6 +35,7 @@ To support additional languages, please visit the tutorial on
 - **Home**: Main entry point or dashboard.
 - **Products**: Manages product-related functionalities.
 - **Splash**: Displays splash screen at startup.
+- **Theme Switcher**: A button in the home screen allows users to toggle between dark and light mode for a personalized user experience.
 
 ## Used Packages
 
@@ -52,6 +53,14 @@ To support additional languages, please visit the tutorial on
 - `hive_flutter`: ^1.1.0
 - `cached_network_image`: ^3.3.0
 - `custom_rating_bar`: ^3.0.0
+
+## Screenshots
+
+Here are some screenshots of the application:
+
+![Screenshot 1](Screenshot_1739140101.png)
+
+![Screenshot 2](Screenshot_1739140116.png)
 
 ## Building the App
 

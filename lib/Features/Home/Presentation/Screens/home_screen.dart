@@ -45,6 +45,15 @@ class _HomeScreenState extends State<HomeScreen> {
               },
               icon: const Icon(Icons.favorite),
             ),
+            IconButton(
+              onPressed: () {
+                // Toggle theme mode
+                Get.isDarkMode
+                    ? Get.changeTheme(ThemeData.light())
+                    : Get.changeTheme(ThemeData.dark());
+              },
+              icon: Icon(Get.isDarkMode ? Icons.dark_mode : Icons.light_mode),
+            ),
           ],
         ),
         body: BlocBuilder<HomeBloc, HomeStates>(

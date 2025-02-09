@@ -58,7 +58,7 @@ To support additional languages, please visit the tutorial on
 
 Here are some screenshots of the application:
 
-![Screenshot 1](Screenshot_1739140101.png)
+![Screenshot 1](Screenshot_1739141570.png)
 
 ![Screenshot 2](Screenshot_1739140116.png)
 

@@ -4,6 +4,9 @@ import 'package:task_app/Core/Config/route_names.dart';
 import 'package:task_app/Features/Details/Presentation/Bindings/details_bindings.dart';
 import 'package:task_app/Features/Details/Presentation/Blocs/details_bloc.dart';
 import 'package:task_app/Features/Details/Presentation/Screens/details_screen.dart';
+import 'package:task_app/Features/Favorites/Bindings/favorites_bindings.dart';
+import 'package:task_app/Features/Favorites/Blocs/favorites_bloc.dart';
+import 'package:task_app/Features/Favorites/Screens/favorites_screen.dart';
 import 'package:task_app/Features/Home/Presentation/Bindings/home_bindings.dart';
 import 'package:task_app/Features/Home/Presentation/Bloc/home_bloc.dart';
 import 'package:task_app/Features/Home/Presentation/Screens/home_screen.dart';
@@ -39,6 +42,15 @@ class AppRoutes {
         ),
       ),
       binding: DetailsBindings(),
+      transition: Transition.fadeIn,
+    ),
+    GetPage(
+      name: RouteNames.favorites,
+      page: () => bloc.BlocProvider(
+        create: (context) => Get.find<FavoritesBloc>(),
+        child: const FavoritesScreen(),
+      ),
+      binding: FavoritesBindings(),
       transition: Transition.fadeIn,
     ),
   ];

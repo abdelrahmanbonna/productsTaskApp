@@ -34,7 +34,7 @@ class ProductsRepositoryImpl implements ProductsRepository {
         (l) => null,
         (r) => _productsDatabaseDataSource.saveProducts(r),
       );
-      _favoriteProducts = await _favoriteProductDataSource
+      _favoriteProducts = _favoriteProductDataSource
           .getProducts();
     }
 
@@ -69,7 +69,7 @@ class ProductsRepositoryImpl implements ProductsRepository {
 
   @override
   Future<List<Product>> getFavoriteProducts() async {
-    final listFromDataSource = await _favoriteProductDataSource.getProducts();
+    final listFromDataSource = _favoriteProductDataSource.getProducts();
 
     if (listFromDataSource.isNotEmpty) {
       _favoriteProducts.clear();

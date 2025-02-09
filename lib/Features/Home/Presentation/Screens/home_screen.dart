@@ -41,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             IconButton(
               onPressed: () {
-                //todo: implement favorite
+                Get.toNamed(RouteNames.favorites);
               },
               icon: const Icon(Icons.favorite),
             ),

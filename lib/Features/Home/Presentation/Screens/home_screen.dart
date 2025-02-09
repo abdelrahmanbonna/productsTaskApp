@@ -1,4 +1,3 @@
-import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
@@ -70,20 +69,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 addAutomaticKeepAlives: true,
                 addRepaintBoundaries: true,
                 itemBuilder: (context, index) {
-                  return FadeIn(
-                    duration: const Duration(milliseconds: 400),
-                    delay: Duration(milliseconds: 200 + 100 * index),
-                    curve: Curves.easeInCubic,
-                    child: ProductCardWidget(
-                      imageUrl: state.products[index].image,
-                      title: state.products[index].title,
-                      price: state.products[index].price.toString(),
-                      rating: state.products[index].rating,
-                      onTap: () {
-                        Get.toNamed(RouteNames.details,
-                            arguments: state.products[index]);
-                      },
-                    ),
+                  return ProductCardWidget(
+                    imageUrl: state.products[index].image,
+                    title: state.products[index].title,
+                    price: state.products[index].price.toString(),
+                    rating: state.products[index].rating,
+                    onTap: () {
+                      Get.toNamed(RouteNames.details,
+                          arguments: state.products[index]);
+                    },
                   );
                 },
               );
@@ -93,6 +87,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Text(state.failure?.message ?? "Something went wrong"),
               );
             }
+
+            // Loading state
+            if (state is LoadingState) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+
             return const Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,

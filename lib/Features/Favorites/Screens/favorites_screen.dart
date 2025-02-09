@@ -77,6 +77,14 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
               child: Text(state.failure.message),
             );
           }
+
+          // Loading state
+          if (state is FavoritesLoadingState) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
           return const Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,

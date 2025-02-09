@@ -29,9 +29,13 @@ class RemoveFromFavoriteProductsEvent implements DetailsEvents {
   bool? get stringify => true;
 }
 
-class ToggleFavoriteEvent extends DetailsEvent {
+class GetFavoriteStatusEvent implements DetailsEvents {
   final Product product;
-  final bool isFavorite;
 
-  ToggleFavoriteEvent(this.product, this.isFavorite);
+  GetFavoriteStatusEvent(this.product,);
+  @override 
+  List<Object?> get props => [product];
+  
+  @override 
+  bool? get stringify => true;
 }

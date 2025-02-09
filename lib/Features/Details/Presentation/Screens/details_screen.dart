@@ -24,11 +24,17 @@ class _DetailsScreenState extends State<DetailsScreen> {
   void initState() {
     super.initState();
     _product = widget.product;
+    _detailsBloc.add(GetFavoriteStatusEvent(widget.product));
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<DetailsBloc, DetailsStates>(
+    return BlocConsumer<DetailsBloc, DetailsStates>(
+      listener: (context, state) {
+        if (state is GetFavoriteStatusState) {
+          _product = _product.copyWith(isFavorite: state.isFavorite);
+        }
+      },
       builder: (context, state) {
         return Scaffold(
           backgroundColor: Theme.of(context).cardColor,

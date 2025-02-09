@@ -58,3 +58,20 @@ class ProductSavedToFavorite extends DetailsStates {
   @override
   bool? get stringify => true;
 }
+
+class GetFavoriteStatusState extends DetailsStates {
+  final bool isFavorite;
+
+  GetFavoriteStatusState(this.isFavorite);
+  @override
+  Failure? get failure => null;
+
+  @override
+  bool get isLoading => false;
+
+  @override
+  List<Object?> get props => [];
+  
+  @override
+  bool? get stringify => true;
+}

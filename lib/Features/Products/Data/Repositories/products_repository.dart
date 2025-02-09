@@ -17,7 +17,7 @@ class ProductsRepositoryImpl implements ProductsRepository {
   final ProductsDataSource _productsDataSource;
   final ProductsDatabaseDataSource _productsDatabaseDataSource;
   final FavoriteProductDataSource _favoriteProductDataSource;
-  final List<Product> _favoriteProducts;
+  List<Product> _favoriteProducts;
 
   ProductsRepositoryImpl(
     this._productsDataSource,
@@ -25,31 +25,35 @@ class ProductsRepositoryImpl implements ProductsRepository {
     this._favoriteProductDataSource,
     this._favoriteProducts,
   );
-  
+
   @override
   Future<Either<Failure, List<Product>>> getProducts(bool forceUpdate) async {
     if (forceUpdate) {
+      final result = await _productsDataSource.getProducts();
+      result.fold(
+        (l) => null,
+        (r) => _productsDatabaseDataSource.saveProducts(r),
+      );
+      _favoriteProducts = await _favoriteProductDataSource
+          .getProducts();
+    }
+
+    final cacheResult = await _productsDatabaseDataSource.getProducts();
+    if (cacheResult.isRight()) {
+      return cacheResult.map((r) => r.map((e) {
+            final isFavorite = _favoriteProducts.any((fav) => fav.id == e.id);
+            return e.copyWith(isFavorite: isFavorite);
+          }).toList());
+    } else {
       final networkResult = await _productsDataSource.getProducts();
       if (networkResult.isRight()) {
         networkResult.fold(
-            (l) => null, (r) => _productsDatabaseDataSource.saveProducts(r));
+            (l) => null,
+            (r) => _productsDatabaseDataSource.saveProducts(
+                  r,
+                ));
       }
       return networkResult;
-    } else {
-      final cacheResult = await _productsDatabaseDataSource.getProducts();
-      if (cacheResult.isRight()) {
-        return cacheResult;
-      } else {
-        final networkResult = await _productsDataSource.getProducts();
-        if (networkResult.isRight()) {
-          networkResult.fold(
-              (l) => null,
-              (r) => _productsDatabaseDataSource.saveProducts(
-                    r,
-                  ));
-        }
-        return networkResult;
-      }
     }
   }
 
@@ -76,14 +80,18 @@ class ProductsRepositoryImpl implements ProductsRepository {
   }
 
   @override
-  Future<bool> addFavoriteProduct(Product product) {
-    _favoriteProducts.add(product.copyWith(isFavorite: true));
+  Future<bool> addFavoriteProduct(Product product) async {
+    final updatedProduct = product.copyWith(isFavorite: true);
+    _favoriteProducts.removeWhere((p) => p.id == product.id);
+    _favoriteProducts.add(updatedProduct);
     return _favoriteProductDataSource.saveProducts(_favoriteProducts);
   }
 
   @override
-  Future<bool> removeFavoriteProduct(Product product) {
-    _favoriteProducts.removeAt(_favoriteProducts.indexOf(product));
+  Future<bool> removeFavoriteProduct(Product product) async {
+    final updatedProduct = product.copyWith(isFavorite: false);
+    _favoriteProducts.removeWhere((p) => p.id == product.id);
+    _favoriteProducts.add(updatedProduct);
     return _favoriteProductDataSource.saveProducts(_favoriteProducts);
   }
 }

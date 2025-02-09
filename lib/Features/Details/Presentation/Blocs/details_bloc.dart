@@ -9,6 +9,7 @@ class DetailsBloc extends Bloc<DetailsEvents, DetailsStates> {
         super(DetailsInitial()) {
     on<SaveToFavoriteProductsEvent>(_onSaveToFavoriteProductsEvent);
     on<RemoveFromFavoriteProductsEvent>(_onRemoveFromFavoriteProductsEvent);
+    on<GetFavoriteStatusEvent>(_onGetFavoriteStatusEvent);
   }
 
   final ProductsRepository _productsRepository;
@@ -33,6 +34,18 @@ class DetailsBloc extends Bloc<DetailsEvents, DetailsStates> {
         emit(ProductRemovedFromFavorite());
       } else {
         emit(DetailsInitial());
+      }
+    });
+  }
+
+  Future<void> _onGetFavoriteStatusEvent(
+      GetFavoriteStatusEvent event, Emitter<DetailsStates> emit) async {
+    emit(LoadingState());
+    await _productsRepository.getFavoriteProducts().then((value) {
+      if (value.contains(event.product)) {
+        emit(GetFavoriteStatusState( true));
+      } else {
+        emit(GetFavoriteStatusState( false));
       }
     });
   }
